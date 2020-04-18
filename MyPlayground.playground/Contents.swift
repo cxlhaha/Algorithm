@@ -1,5 +1,14 @@
 import UIKit
 
+public class ListNode {
+     public var val: Int
+     public var next: ListNode?
+     public init(_ val: Int) {
+         self.val = val
+         self.next = nil
+     }
+}
+
 /**
  1. 两数之和
  给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
@@ -21,7 +30,7 @@ func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
     }
     return []
 }
-twoSum([3, 2, 4], 6)
+//twoSum([3, 2, 4], 6)
 
 
 /**
@@ -34,15 +43,6 @@ twoSum([3, 2, 4], 6)
  输出：7 -> 0 -> 8
  原因：342 + 465 = 807
  */
-
- public class ListNode {
-     public var val: Int
-     public var next: ListNode?
-     public init(_ val: Int) {
-         self.val = val
-         self.next = nil
-     }
-}
 func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
     let resultListNode = ListNode(0)
     var congigureListNode = resultListNode
@@ -70,6 +70,138 @@ func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
 //
 //let result = addTwoNumbers(l1, l2)
 //print(result?.val,result?.next?.val,result?.next?.next?.val)
+
+
+/**
+ 3. 无重复字符的最长子串
+ 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+ 示例 1:
+ 输入: "abcabcbb"
+ 输出: 3
+ 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+ 示例 2:
+ 输入: "bbbbb"
+ 输出: 1
+ 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+ 示例 3:
+ 输入: "pwwkew"
+ 输出: 3
+ 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+ 思路: 滑动窗口
+ */
+func lengthOfLongestSubstring(_ s: String) -> Int {
+    var str = ""
+    var max = 0
+    for char in s {
+        while str.contains(char) {
+            str.remove(at: str.startIndex)
+        }
+        str.append(char)
+        max = max < str.count ? str.count : max
+    }
+    return max
+}
+//lengthOfLongestSubstring("fdasfds")
+
+
+/**
+ 5. 最长回文子串
+ 给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
+ 示例 1：
+ 输入: "babad"
+ 输出: "bab"
+ 注意: "aba" 也是一个有效答案。
+ 示例 2：
+ 输入: "cbbd"
+ 输出: "bb"
+ 思路:扩展中心
+ */
+func longestPalindrome(_ s: String) -> String {
+    if s.isEmpty {
+        return ""
+    }
+    var maxStr = ""
+    for (index, _) in s.enumerated() {
+        let aTypeLength = longestPalindromeLength(s: s, leftIndex: index, rightIndex: index)
+        let bTypeLength = longestPalindromeLength(s: s, leftIndex: index, rightIndex: index + 1)
+        let length = max(aTypeLength, bTypeLength)
+        if length > maxStr.count {
+            let leftIndex = s.index(s.startIndex, offsetBy: index - length / 2 + 1 - length % 2)
+            let rightIndex = s.index(leftIndex, offsetBy: length)
+            maxStr = String(s[leftIndex..<rightIndex])
+        }
+    }
+    return maxStr
+}
+func longestPalindromeLength(s: String, leftIndex: Int, rightIndex: Int) -> Int {
+    var length = 0
+    var left = leftIndex
+    var right = rightIndex
+        
+    while left >= 0 && right < s.count && s[s.index(s.startIndex, offsetBy: left)] == s[s.index(s.startIndex, offsetBy: right)] {
+        length = right - left + 1
+        left -= 1
+        right += 1
+    }
+    return length
+}
+//print(longestPalindrome("qwerwr"))
+
+
+/**
+ 7. 整数反转
+ 给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。
+
+ 示例 1:
+
+ 输入: 123
+ 输出: 321
+  示例 2:
+
+ 输入: -123
+ 输出: -321
+ 示例 3:
+
+ 输入: 120
+ 输出: 21
+ 注意:
+
+ 假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−231,  231 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
+ */
+func reverse(_ x: Int) -> Int {
+    var input = x
+    var value = 0
+    while input != 0 {
+        let yushu = input % 10
+        input = input / 10
+        if value * 10 + yushu > Int32.max {
+            return 0
+        }
+        if value * 10 + yushu < Int32.min {
+            return 0
+        }
+        value = value*10 + yushu
+    }
+    return value
+}
+//reverse(12345)
+
+
+
+/**
+ 给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。
+ 请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
+ 你可以假设 nums1 和 nums2 不会同时为空。
+ 示例 1:
+ nums1 = [1, 3]
+ nums2 = [2]
+ 则中位数是 2.0
+ 示例 2:
+ nums1 = [1, 2]
+ nums2 = [3, 4]
+ 则中位数是 (2 + 3)/2 = 2.5
+ */
 
 
 
@@ -115,5 +247,5 @@ func findRepeatNumber(_ nums: [Int]) -> Int {
     }
     return -1
 }
-findRepeatNumber([2, 3, 1, 0, 2, 5, 3])
+//findRepeatNumber([2, 3, 1, 0, 2, 5, 3])
 

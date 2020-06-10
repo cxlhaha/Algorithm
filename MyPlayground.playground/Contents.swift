@@ -9,6 +9,22 @@ public class ListNode {
      }
 }
 
+struct Stack<Element> {
+    fileprivate var array: [Element] = []
+
+    mutating func push(_ element: Element) {
+        array.append(element)
+    }
+
+    mutating func pop() -> Element? {
+        return array.popLast()
+    }
+
+    func peek() -> Element? {
+        return array.last
+    }
+}
+
 /**
  1. 两数之和
  给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
@@ -221,9 +237,88 @@ func maxArea(_ height: [Int]) -> Int {
 }
 //maxArea([1,8,6,2,5,4,8,3,7])
 
+/**
+ 20. 有效的括号
+ 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
 
+ 有效字符串需满足：
 
+ 左括号必须用相同类型的右括号闭合。
+ 左括号必须以正确的顺序闭合。
+ 注意空字符串可被认为是有效字符串。
 
+ 示例 1:
+
+ 输入: "()"
+ 输出: true
+ 示例 2:
+
+ 输入: "()[]{}"
+ 输出: true
+ 示例 3:
+
+ 输入: "(]"
+ 输出: false
+ 示例 4:
+
+ 输入: "([)]"
+ 输出: false
+ 示例 5:
+
+ 输入: "{[]}"
+ 输出: true
+ */
+func isValid(_ s: String) -> Bool {
+    
+    var symbolStack = Stack<Character>()
+    enum Direction {
+        case left
+        case right
+        
+        static func getSymbolDirection(symbol: Character) -> Direction {
+            switch symbol {
+            case "{", "[", "(":
+                return .left
+            default:
+                return .right
+            }
+        }
+    }
+    
+    func isPair(left: Character, right: Character) -> Bool {
+        if left == "{" && right == "}" {
+            return true
+        }
+        if left == "[" && right == "]" {
+            return true
+        }
+        if left == "(" && right == ")" {
+            return true
+        }
+        return false
+    }
+    
+    for char in s {
+        let direction = Direction.getSymbolDirection(symbol: char)
+        switch direction {
+        case .left:
+            symbolStack.push(char)
+        case .right:
+            guard let last = symbolStack.peek() else { return false }
+            if isPair(left: last, right: char) {
+                symbolStack.pop()
+            } else {
+                return false
+            }
+        }
+    }
+    if symbolStack.peek() == nil {
+        return true
+    }
+    return false
+}
+
+//isValid("([])")
 
 
 

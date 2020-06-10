@@ -317,11 +317,58 @@ func isValid(_ s: String) -> Bool {
     }
     return false
 }
-
 //isValid("([])")
 
+/**
+ 21. 合并两个有序链表
+ 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+ 示例：
+ 输入：1->2->4, 1->3->4
+ 输出：1->1->2->3->4->4
+ */
 
+func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+    
+    let resultList = ListNode(0)
+    
+    var resultIndex = resultList
+    var l1Index = l1
+    var l2Index = l2
+    
+    while (l1Index != nil || l2Index != nil) {
+        var min = ListNode(0)
 
+        if l1Index == nil {
+            min = l2Index!
+            l2Index = l2Index?.next
+        } else if l2Index == nil {
+            min = l1Index!
+            l1Index = l1Index?.next
+        } else {
+            if l1Index!.val > l2Index!.val {
+                min = l2Index!
+                l2Index = l2Index?.next
+            } else {
+                min = l1Index!
+                l1Index = l1Index?.next
+            }
+        }
+        
+        resultIndex.next = min
+        resultIndex = resultIndex.next!
+    }
+    
+    return resultList.next
+}
+//let l1 = ListNode(1)
+//l1.next = ListNode(2)
+//l1.next?.next = ListNode(4)
+//
+//let l2 = ListNode(1)
+//l2.next = ListNode(3)
+//l2.next?.next = ListNode(4)
+//
+//mergeTwoLists(l1, l2)
 
 
 

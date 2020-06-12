@@ -26,6 +26,22 @@ struct Stack<Element> {
 }
 
 /**
+ 快速排序
+ */
+func quickSort<T: Comparable>(array: [T]) ->[T] {
+    if array.count < 2 {
+        return array
+    }
+    let baseValue = array[0]
+    let less = array.filter {$0 < baseValue}
+    let equal = array.filter{$0 == baseValue}
+    let greater = array.filter{$0 > baseValue}
+    
+    return quickSort(array: less) + equal + quickSort(array: greater)
+}
+let array = quickSort(array: [3,2,5,8,3,82,2,1])
+
+/**
  1. 两数之和
  给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
  你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
@@ -119,6 +135,29 @@ func lengthOfLongestSubstring(_ s: String) -> Int {
     return max
 }
 //lengthOfLongestSubstring("fdasfds")
+
+/**
+ 面试题03. 数组中重复的数字
+ 找出数组中重复的数字。
+ 在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
+ 示例 1：
+ 输入：
+ [2, 3, 1, 0, 2, 5, 3]
+ 输出：2 或 3
+ */
+func findRepeatNumber(_ nums: [Int]) -> Int {
+    var numSet = Set<Int>()
+    for num in nums {
+        if numSet.contains(num) {
+            return num
+        } else {
+            numSet.insert(num)
+        }
+    }
+    return -1
+}
+//findRepeatNumber([2, 3, 1, 0, 2, 5, 3])
+
 
 
 /**
@@ -371,78 +410,83 @@ func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
 //mergeTwoLists(l1, l2)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
- 给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。
- 请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
- 你可以假设 nums1 和 nums2 不会同时为空。
- 示例 1:
- nums1 = [1, 3]
- nums2 = [2]
- 则中位数是 2.0
- 示例 2:
- nums1 = [1, 2]
- nums2 = [3, 4]
- 则中位数是 (2 + 3)/2 = 2.5
+ 22. 括号生成
+ 数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
+ 示例：
+ 输入：n = 3
+ 输出：[
+        "((()))",
+        "(()())",
+        "(())()",
+        "()(())",
+        "()()()"
+      ]
  */
-
-
-
+func generateParenthesis(_ n: Int) -> [String] {
+    var array = [String]()
+    func find(nowStr: String, leftCount: Int, rightCount: Int) {
+        if leftCount == n && rightCount == n {
+            array.append(nowStr)
+            return
+        }
+        if leftCount == n {
+            find(nowStr: nowStr + ")", leftCount: leftCount, rightCount: rightCount + 1)
+            return
+        }
+        if leftCount == rightCount {
+            find(nowStr: nowStr + "(", leftCount: leftCount + 1, rightCount: rightCount)
+            return
+        }
+        find(nowStr: nowStr + "(", leftCount: leftCount + 1, rightCount: rightCount)
+        find(nowStr: nowStr + ")", leftCount: leftCount, rightCount: rightCount + 1)
+    }
+    
+    find(nowStr: "", leftCount: 0, rightCount: 0)
+    
+    return array
+}
+//let array = generateParenthesis(6)
 
 /**
- 给你一幅由 N × N 矩阵表示的图像，其中每个像素的大小为 4 字节。请你设计一种算法，将图像旋转 90 度。
- 不占用额外内存空间能否做到？
- 示例 1:
- 给定 matrix =
+ 23. 合并K个排序链表
+ 合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+ 示例:
+ 输入:
  [
-   [1,2,3],
-   [4,5,6],
-   [7,8,9]
- ],
- 原地旋转输入矩阵，使其变为:
- [
-   [7,4,1],
-   [8,5,2],
-   [9,6,3]
+   1->4->5,
+   1->3->4,
+   2->6
  ]
- 思路:先水平翻转,再主对角线翻转
+ 输出: 1->1->2->3->4->4->5->6
  */
- func rotate(_ matrix: inout [[Int]]) {
-
- }
-
-/**
- 找出数组中重复的数字。
- 在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
- 示例 1：
- 输入：
- [2, 3, 1, 0, 2, 5, 3]
- 输出：2 或 3
- */
-func findRepeatNumber(_ nums: [Int]) -> Int {
-    var numSet = Set<Int>()
-    for num in nums {
-        if numSet.contains(num) {
-            return num
-        } else {
-            numSet.insert(num)
+func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+    var valArray = [Int]()
+    func addListNodeValues(listNode: ListNode) {
+        var listNode: ListNode? = listNode
+        while listNode != nil {
+            valArray.append(listNode!.val)
+            listNode = listNode!.next
         }
     }
-    return -1
+    
+    for listNodeO in lists {
+        guard let listNode = listNodeO else { continue }
+        addListNodeValues(listNode: listNode)
+    }
+    if valArray.count < 1 {
+        return nil
+    }
+    valArray = quickSort(array: valArray)
+    let result = ListNode(0)
+    var temp = result
+    for value in valArray {
+        temp.next = ListNode(value)
+        temp = temp.next!
+        
+    }
+    return result.next
 }
-//findRepeatNumber([2, 3, 1, 0, 2, 5, 3])
+
+
 

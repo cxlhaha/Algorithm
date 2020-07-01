@@ -541,3 +541,46 @@ func nextPermutation(_ nums: inout [Int]) {
 //var nums = [1,5,8,4,7,6,5,3,1]
 //nextPermutation(&nums)
 //print(nums)
+
+
+/**
+ 32. 最长有效括号
+ 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+ 示例 1:
+ 输入: "(()"
+ 输出: 2
+ 解释: 最长有效括号子串为 "()"
+ 示例 2:
+ 输入: ")()())"
+ 输出: 4
+ 解释: 最长有效括号子串为 "()()"
+ */
+func longestValidParentheses(_ s: String) -> Int {
+    var stack = Stack<Int>()
+    
+    var maxLength = 0
+    var beginIndex = -1
+    for (index, char) in s.enumerated() {
+        
+        if char == "(" {
+            stack.push(index)
+            if beginIndex == -1 {
+                beginIndex = index
+            }
+        } else {
+            if stack.pop() != nil {
+                var cha = 0
+                if let topValue = stack.peek() {
+                    cha = index-topValue
+                } else {
+                    cha = index-beginIndex + 1
+                }
+                maxLength = max(maxLength, cha)
+            } else {
+                beginIndex = -1
+            }
+        }
+    }
+    return maxLength
+}
+//longestValidParentheses("()()")

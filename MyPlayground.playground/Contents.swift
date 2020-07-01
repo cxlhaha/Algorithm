@@ -489,4 +489,55 @@ func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
 }
 
 
-
+/**
+ 31. 下一个排列
+ 实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。
+ 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+ 必须原地修改，只允许使用额外常数空间。
+ 以下是一些例子，输入位于左侧列，其相应输出位于右侧列。
+ 1,2,3 → 1,3,2
+ 3,2,1 → 1,2,3
+ 1,1,5 → 1,5,1
+ 
+ 158476531
+ */
+func nextPermutation(_ nums: inout [Int]) {
+    if nums.count < 2 {
+        return
+    }
+    var i = nums.count - 1
+    var shouldChangeNumO: Int? = nil
+    while i > 0 {
+        if nums[i] <= nums[i-1] {
+            i -= 1
+            continue
+        } else {
+            shouldChangeNumO = nums[i-1]
+            break
+        }
+    }
+    guard let shouldChangeNum = shouldChangeNumO else {
+        nums.reverse()
+        return
+    }
+    let shouldChangeIndex = i - 1
+    while i < nums.count {
+        if nums[i] <= shouldChangeNum {
+            break
+        }
+        i += 1
+    }
+    let changedIndex = i - 1
+    nums.swapAt(shouldChangeIndex, changedIndex)
+    
+    var begin = shouldChangeIndex + 1
+    var end = nums.count - 1
+    while begin < end {
+        nums.swapAt(begin, end)
+        begin += 1
+        end -= 1
+    }
+}
+//var nums = [1,5,8,4,7,6,5,3,1]
+//nextPermutation(&nums)
+//print(nums)

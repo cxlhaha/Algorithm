@@ -737,4 +737,41 @@ func combinationSum(_ candidates: [Int], _ target: Int) -> [[Int]] {
     find(remainNum: target, currentArray: [], startValue: 0)
     return resultArray
 }
-combinationSum([2,3,5], 8)
+//combinationSum([2,3,5], 8)
+
+
+/**
+ 42. 接雨水
+ 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+ 上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 感谢 Marcos 贡献此图。
+ 示例:
+ 输入: [0,1,0,2,1,0,1,3,2,1,2,1]
+ 输出: 6
+ */
+func trap(_ height: [Int]) -> Int {
+    if height.isEmpty {
+        return 0
+    }
+    var result = 0
+    var firstIndex = 0
+    var lastIndex = height.count - 1
+    var max = 0
+    while firstIndex != lastIndex {
+        let firstValue = height[firstIndex]
+        let lastValue = height[lastIndex]
+        if firstValue <= max {
+            result += (max - firstValue)
+            firstIndex += 1
+            continue
+        }
+        if lastValue <= max {
+            result += (max - lastValue)
+            lastIndex -= 1
+            continue
+        }
+        max = min(firstValue, lastValue)
+    }
+    
+    return result
+}
+trap([0,1,0,2,1,0,1,3,2,1,2,1])

@@ -631,3 +631,60 @@ func search(_ nums: [Int], _ target: Int) -> Int {
     return dichotomySearch(nums, target, 0)
 }
 //search([4,5,6,7,0,1,2], 0)
+
+
+/**
+ 34. 在排序数组中查找元素的第一个和最后一个位置
+ 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+ 你的算法时间复杂度必须是 O(log n) 级别。
+ 如果数组中不存在目标值，返回 [-1, -1]。
+ 示例 1:
+ 输入: nums = [5,7,7,8,8,10], target = 8
+ 输出: [3,4]
+ 示例 2:
+ 输入: nums = [5,7,7,8,8,10], target = 6
+ 输出: [-1,-1]
+ */
+func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+    
+    var minIndex = -1
+    var maxIndex = -1
+    
+    func isComplete() -> Bool {
+        if minIndex != -1 && maxIndex != -1 {
+            return true
+        }
+        return false
+    }
+    func dichotomySearch(startIndex: Int, endIndex: Int) {
+        if startIndex > endIndex {
+            return
+        }
+        let centerIndex = (endIndex - startIndex) / 2 + startIndex
+        let centerValue = nums[centerIndex]
+        if centerValue == target {
+            if centerIndex == 0 || nums[centerIndex - 1] != target {
+                minIndex = centerIndex
+                if isComplete() {
+                    return
+                }
+            }
+            if centerIndex == nums.count - 1 || nums[centerIndex + 1] != target {
+                maxIndex = centerIndex
+                if isComplete() {
+                    return
+                }
+            }
+        }
+        if centerValue >= target {
+            dichotomySearch(startIndex: startIndex, endIndex: centerIndex - 1)
+        }
+        if centerValue <= target {
+            dichotomySearch(startIndex: centerIndex + 1, endIndex: endIndex)
+        }
+    }
+    
+    dichotomySearch(startIndex: 0, endIndex: nums.count - 1)
+    return [minIndex, maxIndex]
+}
+//searchRange([5,7,7,8,8,10], 8)

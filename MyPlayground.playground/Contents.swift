@@ -688,3 +688,53 @@ func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
     return [minIndex, maxIndex]
 }
 //searchRange([5,7,7,8,8,10], 8)
+
+
+/**
+ 39. 组合总和
+ 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+ candidates 中的数字可以无限制重复被选取。
+ 说明：
+ 所有数字（包括 target）都是正整数。
+ 解集不能包含重复的组合。
+ 示例 1:
+ 输入: candidates = [2,3,6,7], target = 7,
+ 所求解集为:
+ [
+   [7],
+   [2,2,3]
+ ]
+ 示例 2:
+ 输入: candidates = [2,3,5], target = 8,
+ 所求解集为:
+ [
+   [2,2,2,2],
+   [2,3,3],
+   [3,5]
+ ]
+ */
+func combinationSum(_ candidates: [Int], _ target: Int) -> [[Int]] {
+    
+    var resultArray = [[Int]]()
+    
+    func find(remainNum: Int, currentArray: Array<Int>, startValue: Int) {
+        for candidate in candidates {
+            if candidate < startValue {
+                continue;
+            }
+            var newArray = currentArray
+            let nextRemainNum = remainNum - candidate
+            if nextRemainNum == 0 {
+                newArray.append(candidate)
+                resultArray.append(newArray)
+            } else if nextRemainNum > 0 {
+                newArray.append(candidate)
+                find(remainNum: nextRemainNum, currentArray: newArray, startValue: candidate)
+            }
+        }
+    }
+    
+    find(remainNum: target, currentArray: [], startValue: 0)
+    return resultArray
+}
+combinationSum([2,3,5], 8)

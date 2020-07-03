@@ -774,4 +774,43 @@ func trap(_ height: [Int]) -> Int {
     
     return result
 }
-trap([0,1,0,2,1,0,1,3,2,1,2,1])
+//trap([0,1,0,2,1,0,1,3,2,1,2,1])
+
+
+/**
+ 46. 全排列
+ 给定一个 没有重复 数字的序列，返回其所有可能的全排列。
+ 示例:
+ 输入: [1,2,3]
+ 输出:
+ [
+   [1,2,3],
+   [1,3,2],
+   [2,1,3],
+   [2,3,1],
+   [3,1,2],
+   [3,2,1]
+ ]
+ */
+func permute(_ nums: [Int]) -> [[Int]] {
+    
+    var result = [[Int]]()
+    
+    func find(currentArray: [Int], remain: [Int]) {
+        if remain.isEmpty {
+            result.append(currentArray)
+            return
+        }
+        for (index, remainNum) in remain.enumerated() {
+            var nextCurrent = currentArray
+            nextCurrent.append(remainNum)
+            var nextRemain = remain
+            nextRemain.remove(at: index)
+            find(currentArray: nextCurrent, remain: nextRemain)
+        }
+    }
+    
+    find(currentArray: [], remain: nums)
+    return result
+}
+//permute([1,2,3])
